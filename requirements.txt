@@ -1,0 +1,6 @@
+openai>=1.35.0
+pydantic>=2.7.0
+langgraph>=1.0.0
+tavily-python>=0.3.3
+streamlit>=1.40.0
+python-dotenv>=1.0.0

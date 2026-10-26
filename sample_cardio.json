@@ -1,0 +1,219 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-maria-cardio-002",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-maria-02",
+        "gender": "female",
+        "birthDate": "1962-07-19"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-referral-002",
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "text": "Referral"
+          }
+        ],
+        "code": {
+          "text": "Referral to cardiology"
+        },
+        "subject": {
+          "reference": "Patient/pat-maria-02"
+        },
+        "reasonReference": [
+          {
+            "reference": "Condition/cond-chestpain-402"
+          }
+        ],
+        "reasonCode": [
+          {
+            "text": "New exertional chest discomfort with uncontrolled hypertension"
+          }
+        ],
+        "authoredOn": "2026-10-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-htn-401",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "text": "Essential hypertension"
+        },
+        "recordedDate": "2019-05-02"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-chestpain-402",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "text": "Exertional chest discomfort, new onset"
+        },
+        "recordedDate": "2026-10-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-lisinopril-411",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Lisinopril 40 MG Oral Tablet"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet by mouth once daily"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-amlodipine-412",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine 10 MG Oral Tablet"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet by mouth once daily"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-sbp-421",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic blood pressure"
+            }
+          ],
+          "text": "Systolic Blood Pressure"
+        },
+        "valueQuantity": {
+          "value": 164,
+          "unit": "mmHg"
+        },
+        "effectiveDateTime": "2026-10-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-dbp-422",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic blood pressure"
+            }
+          ],
+          "text": "Diastolic Blood Pressure"
+        },
+        "valueQuantity": {
+          "value": 96,
+          "unit": "mmHg"
+        },
+        "effectiveDateTime": "2026-10-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-ldl-423",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "13457-7",
+              "display": "LDL cholesterol (calculated)"
+            }
+          ],
+          "text": "LDL Cholesterol"
+        },
+        "valueQuantity": {
+          "value": 162,
+          "unit": "mg/dL"
+        },
+        "effectiveDateTime": "2026-08-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-potassium-424",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2823-3",
+              "display": "Potassium"
+            }
+          ],
+          "text": "Serum Potassium"
+        },
+        "valueQuantity": {
+          "value": 4.9,
+          "unit": "mmol/L"
+        },
+        "effectiveDateTime": "2026-10-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-creat-425",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Creatinine"
+            }
+          ],
+          "text": "Serum Creatinine"
+        },
+        "valueQuantity": {
+          "value": 1.1,
+          "unit": "mg/dL"
+        },
+        "effectiveDateTime": "2026-10-14"
+      }
+    }
+  ]
+}

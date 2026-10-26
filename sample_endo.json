@@ -1,0 +1,212 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-david-endo-003",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-david-03",
+        "gender": "male",
+        "birthDate": "1974-02-03"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-referral-003",
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "text": "Referral"
+          }
+        ],
+        "code": {
+          "text": "Referral to endocrinology"
+        },
+        "subject": {
+          "reference": "Patient/pat-david-03"
+        },
+        "reasonReference": [
+          {
+            "reference": "Condition/cond-t2dm-501"
+          }
+        ],
+        "reasonCode": [
+          {
+            "text": "Hyperglycemia despite metformin and glipizide"
+          }
+        ],
+        "authoredOn": "2026-10-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-t2dm-501",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus with hyperglycemia"
+        },
+        "recordedDate": "2018-11-20"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-obesity-502",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "text": "Obesity, class I"
+        },
+        "recordedDate": "2021-03-08"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-metformin-511",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Metformin 1000 MG Oral Tablet"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet by mouth twice daily with meals"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-glipizide-512",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Glipizide 10 MG Oral Tablet"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet by mouth twice daily before meals"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-glucose-521",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting glucose"
+            }
+          ],
+          "text": "Fasting Plasma Glucose"
+        },
+        "valueQuantity": {
+          "value": 238,
+          "unit": "mg/dL"
+        },
+        "effectiveDateTime": "2026-10-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-bmi-522",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "39156-5",
+              "display": "Body mass index"
+            }
+          ],
+          "text": "Body Mass Index"
+        },
+        "valueQuantity": {
+          "value": 34.6,
+          "unit": "kg/m2"
+        },
+        "effectiveDateTime": "2026-10-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-creat-523",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Creatinine"
+            }
+          ],
+          "text": "Serum Creatinine"
+        },
+        "valueQuantity": {
+          "value": 0.9,
+          "unit": "mg/dL"
+        },
+        "effectiveDateTime": "2026-10-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-egfr-524",
+        "status": "final",
+        "code": {
+          "text": "Estimated Glomerular Filtration Rate (eGFR)"
+        },
+        "valueQuantity": {
+          "value": 96,
+          "unit": "mL/min/1.73m2"
+        },
+        "effectiveDateTime": "2026-10-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-ldl-525",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "13457-7",
+              "display": "LDL cholesterol (calculated)"
+            }
+          ],
+          "text": "LDL Cholesterol"
+        },
+        "valueQuantity": {
+          "value": 128,
+          "unit": "mg/dL"
+        },
+        "effectiveDateTime": "2026-06-12"
+      }
+    }
+  ]
+}

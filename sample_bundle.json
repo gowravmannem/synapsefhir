@@ -1,0 +1,102 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-james-ckd-001",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-james-01",
+        "gender": "male",
+        "birthDate": "1968-04-12"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-referral-001",
+        "status": "active",
+        "intent": "order",
+        "category": [
+          {
+            "text": "Referral"
+          }
+        ],
+        "code": {
+          "text": "Referral to nephrology"
+        },
+        "subject": {
+          "reference": "Patient/pat-james-01"
+        },
+        "reasonReference": [
+          {
+            "reference": "Condition/cond-ckd-301"
+          }
+        ],
+        "reasonCode": [
+          {
+            "text": "Chronic kidney disease with declining eGFR and elevated potassium"
+          }
+        ],
+        "authoredOn": "2026-10-06"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-ckd-301",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "text": "Chronic Kidney Disease, Stage 3b"
+        },
+        "recordedDate": "2026-03-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-lisinopril-101",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Lisinopril 20 MG Oral Tablet"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-egfr-201",
+        "status": "final",
+        "code": {
+          "text": "Estimated Glomerular Filtration Rate (eGFR)"
+        },
+        "valueQuantity": {
+          "value": 28,
+          "unit": "mL/min/1.73m2"
+        },
+        "effectiveDateTime": "2026-10-05"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-potassium-202",
+        "status": "final",
+        "code": {
+          "text": "Serum Potassium"
+        },
+        "valueQuantity": {
+          "value": 5.3,
+          "unit": "mmol/L"
+        },
+        "effectiveDateTime": "2026-10-05"
+      }
+    }
+  ]
+}
