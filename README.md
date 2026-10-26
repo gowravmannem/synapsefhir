@@ -148,31 +148,40 @@ Prices come from Token Factory list rates in [config.py](config.py): Nano costs 
 
 ## Setup
 
-**Requirements:** Python 3.10 or later, a [Nebius Token Factory](https://tokenfactory.nebius.com) API key, and (optionally) a [Tavily](https://app.tavily.com) API key.
+**Requirements:** Python 3.11 or later (for the built-in `tomllib`), a [Nebius Token Factory](https://tokenfactory.nebius.com) API key, and (optionally) a [Tavily](https://app.tavily.com) API key.
 
 ```bash
-git clone <your-repo-url> synapsefhir
+git clone https://github.com/gowravmannem/synapsefhir.git
 cd synapsefhir
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Environment configuration
+### API keys
 
-Copy the template and fill in your keys:
+Keys live in TOML, never in the repository.
+
+**Local runs:** copy the template to `config.toml` in the project root and fill in your keys. `config.toml` is git-ignored.
 
 ```bash
-cp .env.example .env
+cp config.toml.example config.toml
 ```
 
-| Variable | Required | Purpose |
-|----------|----------|---------|
-| `NEBIUS_API_KEY` | Yes | Authenticates calls to Nemotron Nano and Ultra on Token Factory. |
-| `TAVILY_API_KEY` | Recommended | Live guideline retrieval. Without it, the pipeline uses an offline summary for the patient's specialty (KDIGO, ACC/AHA or ADA) and labels it as such in the UI. |
-| `NEBIUS_BASE_URL` | No | Overrides the Token Factory endpoint (default `https://api.tokenfactory.nebius.com/v1/`). |
+**Streamlit Community Cloud:** in your app's **Settings → Secrets**, paste the same lines:
 
-`.env` is git-ignored. On **Streamlit Community Cloud**, put the same keys in the app's Secrets as top-level entries. Streamlit exposes those as environment variables, so no code changes are needed.
+```toml
+nebius_api_key = "your-nebius-api-key"
+tavily_api_key = "your-tavily-api-key"
+```
+
+| Key | Required | Purpose |
+|-----|----------|---------|
+| `nebius_api_key` | Yes | Authenticates calls to Nemotron Nano and Ultra on Token Factory. |
+| `tavily_api_key` | Recommended | Live guideline and payer-policy retrieval. Without it, the pipeline uses an offline summary for the patient's specialty (KDIGO, ACC/AHA or ADA) and labels it as such in the UI. |
+| `nebius_base_url` | No | Overrides the Token Factory endpoint (default `https://api.tokenfactory.nebius.com/v1/`). |
+
+[settings.py](settings.py) looks each key up in this order: Streamlit secrets (Cloud, or a local `.streamlit/secrets.toml`), then `config.toml`, then an environment variable of the same name in upper case (for Docker or CI). Key names match regardless of case.
 
 Model IDs, prices, trusted guideline domains and the reconciliation limit are all in [config.py](config.py).
 
@@ -209,6 +218,7 @@ It covers:
 - society and payer searches running separately, with sources tagged by group, a failed payer search not blocking the run, and the society fallback keeping the payer sources (using a fake Tavily client)
 - a payer tag being reset to clinical when no payer policy was retrieved
 - several evidence IDs in one checklist field all having to resolve
+- the API-key lookup order (Streamlit secrets, then `config.toml`, then environment variables), with a fake `st.secrets`
 
 ## Project structure
 
@@ -226,6 +236,8 @@ It covers:
 | [fhir_utils.py](fhir_utils.py) | FHIR reference normalization and the compact resource index. |
 | [scenarios.py](scenarios.py) | The demo patients and the mid-run drift event for each. |
 | [config.py](config.py) | Model IDs, pricing, society and payer domain allowlists, result counts, limits. |
+| [settings.py](settings.py) | API-key lookup: Streamlit secrets, then local `config.toml`, then environment variables. |
+| [config.toml.example](config.toml.example) | Template for the git-ignored `config.toml` that holds API keys locally. |
 | [sample_bundle.json](sample_bundle.json) | Nephrology patient: CKD recorded as stage 3b, eGFR 28, potassium 5.3, on lisinopril; no uACR. |
 | [sample_cardio.json](sample_cardio.json) | Cardiology patient: new exertional chest discomfort, BP 164/96 on lisinopril and amlodipine; no ECG. |
 | [sample_endo.json](sample_endo.json) | Endocrinology patient: type 2 diabetes with fasting glucose 238 on metformin and glipizide; no HbA1c. |

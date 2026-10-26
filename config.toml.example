@@ -1,0 +1,12 @@
+# Copy to config.toml (git-ignored) for local runs.
+# On Streamlit Community Cloud, paste these same lines into the app's Settings > Secrets instead.
+
+# Required: Nebius Token Factory API key (https://tokenfactory.nebius.com)
+nebius_api_key = "your-nebius-api-key"
+
+# Optional: Tavily API key for live guideline and payer-policy retrieval (https://app.tavily.com).
+# Without it the pipeline uses a clearly flagged offline guideline summary.
+tavily_api_key = "your-tavily-api-key"
+
+# Optional: override the Token Factory endpoint
+# nebius_base_url = "https://api.tokenfactory.nebius.com/v1/"

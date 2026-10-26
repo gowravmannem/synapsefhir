@@ -1,13 +1,8 @@
 import json
-import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import TypedDict, Dict, Any, List
-from dotenv import load_dotenv
 from langgraph.graph import StateGraph, END
-
-# Automatically load environment variables from .env in the project root
-load_dotenv()
 
 from config import (MODEL_FAST, MODEL_REASONING, SOCIETY_DOMAINS, PAYER_DOMAINS, SOCIETY_MAX_RESULTS,
                     PAYER_MAX_RESULTS, PAYER_EXCLUDE_DOMAINS, MAX_RECONCILIATIONS)
@@ -17,9 +12,10 @@ from governance import TrajectoryGovernor, take_snapshot
 from llm import call_structured
 from schemas import FastTriageResult, FinalReferralPackage, ReconciliationResult
 from telemetry import ExecutionTelemetry
+from settings import get_setting
 from validation import validate_referral
 
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+TAVILY_API_KEY = get_setting("TAVILY_API_KEY")
 
 # Offline summaries used only when Tavily is unavailable, picked by the specialty triage inferred
 FALLBACK_GUIDELINES = {

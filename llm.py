@@ -1,11 +1,11 @@
 import json
-import os
 import re
 import time
 from typing import Type, TypeVar
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 from config import NEBIUS_BASE_URL
+from settings import get_setting
 from telemetry import ExecutionTelemetry
 
 T = TypeVar("T", bound=BaseModel)
@@ -18,9 +18,10 @@ _client = None
 def get_client() -> OpenAI:
     global _client
     if _client is None:
-        api_key = os.getenv("NEBIUS_API_KEY")
+        api_key = get_setting("NEBIUS_API_KEY")
         if not api_key:
-            raise PipelineError("NEBIUS_API_KEY isn't set. Add it to .env or your Streamlit secrets.")
+            raise PipelineError("The Nebius API key isn't set. Add nebius_api_key to config.toml for local runs, "
+                                "or to your app's Secrets on Streamlit Community Cloud.")
         _client = OpenAI(base_url=NEBIUS_BASE_URL, api_key=api_key, max_retries=3, timeout=180)
     return _client
 
