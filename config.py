@@ -1,6 +1,6 @@
-import os
+from settings import get_setting
 
-NEBIUS_BASE_URL = os.getenv("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/")
+NEBIUS_BASE_URL = get_setting("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/")
 
 # Available models on Nebius Token Factory
 MODEL_FAST = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"   # High-throughput extraction

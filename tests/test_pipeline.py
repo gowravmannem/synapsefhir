@@ -174,3 +174,27 @@ checked, rep = validate_referral(multi, {"obs-sbp-421", "obs-dbp-422"})
 assert checked["guideline_audit"][0]["status"] == "SATISFIED" and checked["guideline_audit"][0]["supporting_resource_id"] == "obs-sbp-421, obs-dbp-422"
 assert checked["guideline_audit"][1]["status"] == "UNVERIFIED" and rep["rejected_ids"] == ["obs-fake-1"], rep
 print("multi-id evidence OK")
+
+# Settings lookup: Streamlit secrets (Cloud) win over local config.toml, which wins over env; keys match any case
+import settings
+real_streamlit = sys.modules.get("streamlit")
+try:
+    settings._local_toml.cache_clear()
+    settings.LOCAL_SECRETS_FILE, saved_path = settings.LOCAL_SECRETS_FILE.with_name("_test_settings.toml"), settings.LOCAL_SECRETS_FILE
+    settings.LOCAL_SECRETS_FILE.write_text('nebius_api_key = "from-toml"\ntavily_api_key = "tavily-from-toml"\n')
+    os.environ["NEBIUS_BASE_URL"] = "https://env.example/v1/"
+    sys.modules["streamlit"] = types.SimpleNamespace(secrets={"NEBIUS_API_KEY": "from-cloud"})
+    assert settings.get_setting("NEBIUS_API_KEY") == "from-cloud"
+    assert settings.get_setting("tavily_api_key") == "tavily-from-toml"
+    assert settings.get_setting("NEBIUS_BASE_URL") == "https://env.example/v1/"
+    assert settings.get_setting("MISSING_KEY", "fallback") == "fallback"
+finally:
+    settings.LOCAL_SECRETS_FILE.unlink(missing_ok=True)
+    settings.LOCAL_SECRETS_FILE = saved_path
+    settings._local_toml.cache_clear()
+    os.environ.pop("NEBIUS_BASE_URL", None)
+    if real_streamlit is not None:
+        sys.modules["streamlit"] = real_streamlit
+    else:
+        sys.modules.pop("streamlit", None)
+print("settings lookup OK")
