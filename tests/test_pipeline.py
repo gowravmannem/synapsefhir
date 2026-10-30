@@ -198,3 +198,27 @@ finally:
     else:
         sys.modules.pop("streamlit", None)
 print("settings lookup OK")
+
+# Triage runs Lightning with reasoning off and schema-constrained output; a reasoning-only reply is retried
+import llm
+from config import MODEL_FAST as FAST_MODEL
+from schemas import FastTriageResult as TriageSchema
+calls = []
+class FakeLightning:
+    def create(self, **kw):
+        calls.append(kw)
+        if len(calls) == 1:  # first reply: budget spent on reasoning, no content
+            return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=None), finish_reason="length")],
+                                   usage=SimpleNamespace(prompt_tokens=100, completion_tokens=8192))
+        return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=json.dumps(TRIAGE)), finish_reason="stop")],
+                               usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50))
+llm._client = SimpleNamespace(chat=SimpleNamespace(completions=FakeLightning()))
+tel = ExecutionTelemetry()
+out = llm.call_structured(model=FAST_MODEL, prompt="x", schema=TriageSchema, telemetry=tel, step="Triage", details="d", reasoning=False)
+assert out.suspected_specialty == "Nephrology" and len(calls) == 2
+assert calls[0]["extra_body"] == {"chat_template_kwargs": {"enable_thinking": False}}
+assert calls[0]["response_format"]["type"] == "json_schema" and calls[0]["response_format"]["json_schema"]["strict"] is True
+assert "whole output budget on reasoning" in tel.step_logs[0]["details"]
+import inspect
+assert "reasoning=False" in inspect.getsource(pipeline.node_fast_triage)
+print("lightning triage request OK")

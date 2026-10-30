@@ -1,7 +1,7 @@
 import json
 import re
 import time
-from typing import Type, TypeVar
+from typing import Any, Dict, Type, TypeVar
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 from config import NEBIUS_BASE_URL
@@ -40,9 +40,22 @@ def extract_json(text: str) -> dict:
     return json.loads(text[start:end + 1])
 
 def call_structured(*, model: str, prompt: str, schema: Type[T], telemetry: ExecutionTelemetry,
-                    step: str, details: str, temperature: float = 0.0, max_attempts: int = 2) -> T:
-    """Call a Token Factory model and validate its reply against a Pydantic schema, retrying with the error on failure."""
+                    step: str, details: str, temperature: float = 0.0, max_attempts: int = 2,
+                    reasoning: bool = True) -> T:
+    """Call a Token Factory model and validate its reply against a Pydantic schema, retrying with the error on failure.
+
+    reasoning=False turns off the model's thinking phase and constrains decoding to the schema. Use it for
+    extraction steps: Nemotron 3.5 Lightning otherwise reasons until it exhausts its output budget and
+    returns no content.
+    """
     messages = [{"role": "user", "content": prompt}]
+    request: Dict[str, Any] = {"response_format": {"type": "json_object"}}
+    if not reasoning:
+        request = {
+            "response_format": {"type": "json_schema",
+                                "json_schema": {"name": schema.__name__, "schema": schema.model_json_schema(), "strict": True}},
+            "extra_body": {"chat_template_kwargs": {"enable_thinking": False}},
+        }
     last_error = None
     for attempt in range(1, max_attempts + 1):
         started = time.perf_counter()
@@ -50,11 +63,14 @@ def call_structured(*, model: str, prompt: str, schema: Type[T], telemetry: Exec
             model=model,
             messages=messages,
             temperature=temperature,
-            response_format={"type": "json_object"},
+            **request,
         )
         latency = time.perf_counter() - started
-        content = response.choices[0].message.content
+        choice = response.choices[0]
+        content = choice.message.content
         try:
+            if not content and getattr(choice, "finish_reason", None) == "length":
+                raise ValueError("The model used its whole output budget on reasoning and returned no answer")
             parsed = schema.model_validate(extract_json(content))
         except (ValueError, ValidationError) as e:
             last_error = e

@@ -17,7 +17,21 @@ Reasoning: Available
 Responses API: Available
 
 
+#nvidia/Nemotron-3_5-Lightning (replace Nano due to Nano deprecation)
+1 million input: $0.06
+1 million cached: $0.03
+1 million output: $0.24
 
+Base model at 314.2 tokens/sec speed in EU-north-1 region
+
+NVIDIA's 30B-parameter hybrid MoE model with 3B active parameters per token, designed for efficient agentic reasoning, tool use, coding, and long-context workflows.
+
+Modality: Text-to-text
+Context: 1024k
+Quantization: BF16
+Tool calling: Available
+Reasoning: Available
+Responses API: Available
 
 
 #nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B (Fast Model)

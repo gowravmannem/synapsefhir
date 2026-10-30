@@ -67,23 +67,24 @@ def node_ingest(state: PipelineState) -> Dict[str, Any]:
                                    f"{len(snapshot['resources'])} resources, SHA-256 {snapshot['hash'][:12]}")
     return {"raw_bundle": bundle, "snapshot": snapshot, "reconcile_count": 0, "reconciliation_log": []}
 
-# NODE 1: Fast Entity Extraction & Triage (Nemotron Nano)
+# NODE 1: Fast Entity Extraction & Triage (Nemotron 3.5 Lightning, reasoning off)
 def node_fast_triage(state: PipelineState) -> Dict[str, Any]:
     prompt = f"""You are a high-throughput clinical parser.
 Analyze this FHIR R4 JSON bundle:
 1. Identify the patient ID and the target specialist discipline (e.g., Nephrology, Cardiology). If the bundle contains a referral ServiceRequest, use the specialty it requests and its reason as the referral indication. Otherwise, route to the specialty that manages the primary active problem that is uncontrolled or progressing despite current treatment, not to a secondary risk factor.
-2. Formulate a specific search query for the society guideline's referral criteria and the diagnostic workup (labs and imaging) that should be completed before referral to that specialty. Build it from the specialty and the referral indication only; do not guess at specific tests or add conditions the record doesn't show.
-3. Formulate a second query, 'payer_search_query', for insurer clinical policy or medical-necessity criteria covering this referral and its diagnostic workup (as published in payer coverage policies). Same rule: specialty and referral indication only.
+2. Formulate a specific search query for the society guideline's referral criteria and the diagnostic workup (labs and imaging) that should be completed before referral to that specialty. Build it from the specialty and the referral indication only; do not guess at specific tests, name medications, or add ages, values or conditions the record doesn't show. Keep it under 15 words.
+3. Formulate a second query, 'payer_search_query', for insurer clinical policy or medical-necessity criteria covering this referral and its diagnostic workup (as published in payer coverage policies). Same rules: specialty and referral indication only, under 15 words.
 4. Extract relevant active conditions, labs, imaging, and medications. Use each resource's bare "id" value exactly as written.
 
-Output STRICT JSON matching schema:
+Output one JSON object that fills in this schema (do not repeat the schema itself):
 {json.dumps(FastTriageResult.model_json_schema())}
 
 FHIR BUNDLE:
 {json.dumps(state["raw_bundle"])}
 """
     triage = call_structured(model=MODEL_FAST, prompt=prompt, schema=FastTriageResult, telemetry=state["telemetry"],
-                             step="Fast Clinical Triage", details="Extracted clinical entities and query")
+                             step="Fast Clinical Triage", details="Extracted clinical entities and queries",
+                             reasoning=False)
     return {"triage_result": triage.model_dump()}
 
 def _tavily_search(query: str, domains: List[str], max_results: int, exclude: List[str] = ()) -> List[Dict[str, Any]]:

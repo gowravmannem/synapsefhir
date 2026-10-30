@@ -1,4 +1,4 @@
-# Demo patients. Labels stay neutral on purpose: the specialty is inferred by Nemotron Nano at triage, not chosen here.
+# Demo patients. Labels stay neutral on purpose: the specialty comes from triage (Nemotron 3.5 Lightning), not chosen here.
 # Each drift event is a result filed into the chart by another system while the agent is mid-run.
 PATIENTS = {
     "pat-james-01 · 58M": {

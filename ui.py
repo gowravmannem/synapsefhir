@@ -3,6 +3,7 @@ import html
 from datetime import date
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
+from config import MODEL_FAST, MODEL_REASONING
 from fhir_utils import iter_resources, resource_date, resource_display, resource_value
 
 CSS = """<style>
@@ -74,7 +75,7 @@ div[data-testid="stExpander"] details{background:var(--card);border:1px solid va
 
 NODE_META = {
     "ingest": ("Ingest", "SHA-256 snapshot"),
-    "fast_triage": ("Triage", "Nemotron Nano"),
+    "fast_triage": ("Triage", "Nemotron Lightning"),
     "fetch_guidelines": ("Guidelines", "Tavily search"),
     "deep_synthesis": ("Synthesis", "Nemotron Ultra"),
     "validate_citations": ("Validate", "Citation check"),
@@ -311,13 +312,13 @@ def orders_panel(res: Dict[str, Any], commit: Optional[Dict[str, Any]]) -> str:
     return card(banner + "".join(rows) + timeline + commit_html, label="Orders and governance")
 
 def metrics(telemetry, wall_sec: float) -> str:
-    def rate(model_key: str) -> str:
-        speeds = [s["tokens_per_sec"] for s in telemetry.step_logs if model_key in s["model"] and s["tokens_per_sec"]]
+    def rate(model_id: str) -> str:
+        speeds = [s["tokens_per_sec"] for s in telemetry.step_logs if s["model"] == model_id and s["tokens_per_sec"]]
         return f"{sum(speeds) / len(speeds):.0f} tok/s" if speeds else "n/a"
     cells = [
         ("Run cost", f"${telemetry.total_cost:.4f}", "Per-model Token Factory pricing"),
         ("Saved vs Ultra-only", f"{telemetry.savings_pct:.0f}%", f"Same tokens at Ultra rates: ${telemetry.ultra_only_cost:.4f}"),
-        ("Wall time", f"{wall_sec:.1f}s", f"Nano {rate('Nano')} · Ultra {rate('Ultra')}"),
+        ("Wall time", f"{wall_sec:.1f}s", f"Lightning {rate(MODEL_FAST)} · Ultra {rate(MODEL_REASONING)}"),
         ("Tokens", f"{telemetry.total_tokens:,}", f"{telemetry.prompt_tokens:,} prompt · {telemetry.completion_tokens:,} completion"),
     ]
     inner = "".join(f'<div class="sf-metric"><div class="k">{esc(k)}</div><div class="v">{esc(v)}</div><div class="s">{esc(s)}</div></div>'

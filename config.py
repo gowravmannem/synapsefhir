@@ -3,7 +3,7 @@ from settings import get_setting
 NEBIUS_BASE_URL = get_setting("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/")
 
 # Available models on Nebius Token Factory
-MODEL_FAST = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"   # High-throughput extraction
+MODEL_FAST = "nvidia/Nemotron-3_5-Lightning"
 MODEL_REASONING = "nvidia/Nemotron-3-Ultra-550b-a55b"  # Frontier MoE reasoning
 
 # Token Factory list prices, USD per 1M tokens (see nebius_model_info.txt)
