@@ -10,7 +10,7 @@ SynapseFHIR reads a patient's HL7 FHIR R4 record and the referral order in it. I
 
 ## Why
 
-Up to 30% of specialist consults arrive without the baseline diagnostics the specialist needs, such as a nephrology referral with no urine albumin result or a cardiology consult with no ECG. The consult gets rescheduled, the patient waits, and the slot is wasted. SynapseFHIR closes that gap before the referral is sent, and makes every step auditable:
+**Up to 30% of specialist consults arrive without the baseline diagnostics the specialist needs**, such as a nephrology referral with no urine albumin result or a cardiology consult with no ECG. The initial visit is wasted running tests and a productive visit is scheduled weeks later. **Unproductive, unoptimized specialist consultation blocks drain an estimated $100 billion annually from the U.S. healthcare system.** SynapseFHIR closes that gap before the referral is sent, and makes every step auditable:
 
 - **Every claim cites a record.** Each statement in the memo carries the FHIR resource IDs it rests on. Code checks those IDs against the bundle, and anything that doesn't resolve is removed and flagged.
 - **Guidelines come from the live web, not hardcoded rules.** Tavily searches the specialty societies that define the standard of care (KDIGO, NKF, ACC/AHA, ADA, Endocrine Society, AAN), NCBI, and the clinical policies of major insurers (Aetna, UnitedHealthcare, Cigna, Anthem, CMS). The checklist lists the sources it was built from, with links.
